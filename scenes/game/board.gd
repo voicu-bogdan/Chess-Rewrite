@@ -8,10 +8,7 @@ extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_board_size()
-	add_piece(false, "king", Vector2i(3,4))
-	add_piece(true, "queen", Vector2i(5,1))
-	add_piece(true, "pawn", Vector2i(8, 8))
-	add_piece(true, "pawn", Vector2i(2, 6))
+	set_board_from_FEN(get_meta("FEN"))
 
 func update_board_size():
 	for n in board.get_children(): # remove all previous children
@@ -42,9 +39,26 @@ func add_piece(is_white, name, position):
 	new_piece.set_meta("is_white", is_white)
 	tile.add_child(new_piece)
 
+func set_board_from_FEN(fen_code):
+	var x = 1;
+	var y = board_size;
+	for i in fen_code:
+		if i=="/": #check if new line
+			x = 1
+			y = y-1
+		elif (i >= '0' && i <= '9'): #check if the number is an integer
+			x = x + int(i)
+		elif i == i.to_lower(): #check if the number is black
+			add_piece(false, FenDictionary.piece_names["black"][i], Vector2i(y, x))
+			x = x+1
+		elif i == i.to_upper(): #check if the number is white
+			add_piece(true, FenDictionary.piece_names["white"][i], Vector2i(y, x))
+			x = x+1
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if get_meta("board_size") != board_size: #update the board if board_size has changed
 		board_size = get_meta("board_size")
 		update_board_size()
+	
 	pass

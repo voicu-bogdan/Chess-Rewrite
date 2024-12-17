@@ -15,6 +15,7 @@ script = ExtResource("1_4dc65")
 metadata/board_size = 8
 metadata/White = Color(1, 1, 1, 1)
 metadata/Black = Color(0, 0, 0, 1)
+metadata/FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1

@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 TextureDictionary="*res://scenes/game/texture_dictionary.gd"
+FenDictionary="*res://scenes/game/FEN_dictionary.gd"
 
 [rendering]
 
