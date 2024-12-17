@@ -1,6 +1,7 @@
 extends Control
 @onready var sprite = $TextureRect
 var old_tile_color
+var legal_moves : Array = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
@@ -15,18 +16,17 @@ func refresh_texture():
 		texture_path = TextureDictionary.piece_textures["black"][piece_name]
 	sprite.texture = load(texture_path)
 
+func update_legal_moves():
+	pass
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	refresh_texture()
 
-
 func _on_focus_entered():
-	var parent_tile = self.get_parent()
-	old_tile_color = parent_tile.color
-	var x = parent_tile.get_meta("Position")
-	print(x)
-	parent_tile.color = Color.GREEN
+	var parent_board = self.get_parent().get_parent().get_parent()
+	parent_board.show_move_markers(self)
 	
 func _on_focus_exited():
-	var parent_tile = self.get_parent()
-	parent_tile.color = old_tile_color
+	var parent_board = self.get_parent().get_parent().get_parent()
+	parent_board.clear_move_markers()

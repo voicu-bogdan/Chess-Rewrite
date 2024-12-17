@@ -2,9 +2,11 @@ extends Control
 @onready var board = $GridContainer
 @onready var tile = preload("res://scenes/game/Tile.tscn")
 @onready var piece = preload("res://scenes/game/Piece.tscn")
+@onready var move_marker = preload("res://scenes/game/move_marker.tscn")
 @onready var board_size = get_meta("board_size")
 @onready var white = get_meta("White")
 @onready var black = get_meta("Black")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_board_size()
@@ -55,6 +57,18 @@ func set_board_from_FEN(fen_code):
 			add_piece(true, FenDictionary.piece_names["white"][i], Vector2i(y, x))
 			x = x+1
 
+func show_move_markers(piece):
+	var position = piece.get_meta("Position")
+	var tile = board.get_node(str(position.x) + "," + str(position.y))
+	var new_move_marker = move_marker.instantiate()
+	tile.add_child(new_move_marker)
+
+func clear_move_markers():
+	for i in board.get_children():
+		if i.get_child_count() == 2:
+			var marker_to_remove = i.get_child(2)
+			marker_to_remove.queue_free
+	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if get_meta("board_size") != board_size: #update the board if board_size has changed
