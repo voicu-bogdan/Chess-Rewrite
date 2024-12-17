@@ -4,6 +4,10 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iximm"]
 bg_color = Color(0.6, 1, 0.6, 1)
+corner_radius_top_left = 1024
+corner_radius_top_right = 1024
+corner_radius_bottom_right = 1024
+corner_radius_bottom_left = 1024
 
 [node name="MoveMarker" type="Panel"]
 anchors_preset = 15

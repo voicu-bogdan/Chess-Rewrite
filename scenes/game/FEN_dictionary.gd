@@ -2,19 +2,19 @@ extends Node
 
 var piece_names: Dictionary = {
 	"black": {
+		"p": "pawn",
+		"r": "rook",
+		"n": "knight",
 		"b": "bishop",
 		"k": "king",
-		"n": "knight",
-		"p": "pawn",
-		"q": "queen",
-		"r": "rook"
+		"q": "queen"
 	},
 	"white": {
+		"P": "pawn",
+		"R": "rook",
+		"N": "knight",
 		"B": "bishop",
 		"K": "king",
-		"N": "knight",
-		"P": "pawn",
-		"Q": "queen",
-		"R": "rook"
+		"Q": "queen"
 	}
 }

@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://2pjmxkraa2sh"]
+[gd_scene load_steps=2 format=3 uid="uid://2pjmxkraa2sh"]
 
 [ext_resource type="PackedScene" uid="uid://co3qqvumiqpca" path="res://scenes/game/board.tscn" id="1_chi5f"]
-[ext_resource type="PackedScene" uid="uid://re54inv13ru5" path="res://scenes/game/Piece.tscn" id="2_m8u5y"]
 
 [node name="BoardTesting" type="Control"]
 layout_mode = 3
@@ -22,11 +21,3 @@ offset_left = -300.0
 offset_top = -300.0
 offset_right = 300.0
 offset_bottom = 300.0
-
-[node name="Piece" parent="." instance=ExtResource("2_m8u5y")]
-layout_mode = 1
-offset_left = -250.0
-offset_top = -94.0
-offset_right = -50.0
-offset_bottom = 106.0
-metadata/Name = &"king"

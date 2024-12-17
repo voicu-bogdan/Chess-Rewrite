@@ -33,8 +33,12 @@ func update_board_size():
 			new_tile.set_meta("Position", position)
 			board.add_child(new_tile)
 
+func get_tile(tile_position):
+	var tile = board.get_node(str(tile_position.x) + "," + str(tile_position.y))
+	return tile
+
 func add_piece(is_white, name, position):
-	var tile = board.get_node(str(position.x) + "," + str(position.y))
+	var tile = get_tile(position)
 	var new_piece = piece.instantiate()
 	new_piece.set_meta("Position", position)
 	new_piece.set_meta("Name", name)
@@ -57,22 +61,18 @@ func set_board_from_FEN(fen_code):
 			add_piece(true, FenDictionary.piece_names["white"][i], Vector2i(y, x))
 			x = x+1
 
-func show_move_markers(piece):
-	var position = piece.get_meta("Position")
-	var tile = board.get_node(str(position.x) + "," + str(position.y))
+func show_move_markers(position):
+	var tile = get_tile(position)
 	var new_move_marker = move_marker.instantiate()
 	tile.add_child(new_move_marker)
 
 func clear_move_markers():
 	for i in board.get_children():
-		if i.get_child_count() == 2:
-			var marker_to_remove = i.get_child(2)
-			marker_to_remove.queue_free
+		if i.has_node("MoveMarker"):
+			i.get_node("MoveMarker").queue_free()
 	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if get_meta("board_size") != board_size: #update the board if board_size has changed
 		board_size = get_meta("board_size")
 		update_board_size()
-	
-	pass
