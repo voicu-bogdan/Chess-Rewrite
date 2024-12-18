@@ -7,6 +7,8 @@ extends Control
 @onready var white = get_meta("White")
 @onready var black = get_meta("Black")
 
+var last_focus
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_board_size()
@@ -61,6 +63,11 @@ func set_board_from_FEN(fen_code):
 			add_piece(true, FenDictionary.piece_names["white"][i], Vector2i(y, x))
 			x = x+1
 
+func move_piece(piece, tile):
+	piece.get_parent().remove_child(piece)
+	tile.add_child(piece)
+	piece.set_meta("Position", tile.get_meta("Position"))
+
 func show_move_markers(position):
 	var tile = get_tile(position)
 	var new_move_marker = move_marker.instantiate()
@@ -70,6 +77,23 @@ func clear_move_markers():
 	for i in board.get_children():
 		if i.has_node("MoveMarker"):
 			i.get_node("MoveMarker").queue_free()
+	pass
+
+func piece_selected(piece):
+	clear_move_markers()
+	piece.update_legal_moves()
+	for move in piece.legal_moves:
+		show_move_markers(move)
+	last_focus = piece
+
+func tile_selected(tile):
+	clear_move_markers()
+	var position = tile.get_meta("Position")
+	print(position)
+	if last_focus.name == "Piece" and last_focus.legal_moves.has(position) == true:
+		move_piece(last_focus, tile)
+		print("piece moved")
+	last_focus = tile
 	pass
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

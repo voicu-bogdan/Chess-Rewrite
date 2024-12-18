@@ -10,6 +10,5 @@ func _process(delta):
 	pass
 
 func _on_focus_entered():
-	var x = self.get_meta("Position")
-	print(x)
-	release_focus()
+	var parent_board = self.get_parent().get_parent()
+	parent_board.tile_selected(self)

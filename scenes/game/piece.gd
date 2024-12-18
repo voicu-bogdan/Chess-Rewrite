@@ -25,7 +25,7 @@ func check_position_legal(position):
 
 func update_legal_moves():	
 	var parent_board = self.get_parent().get_parent().get_parent()
-	var board_size = parent_board.get_parent().get_meta("board_size")
+	var board_size = parent_board.get_meta("board_size")
 	legal_moves = []
 	var position = self.get_meta("Position")
 	var aux = position
@@ -33,13 +33,14 @@ func update_legal_moves():
 	Vector2i(2, 1), Vector2i(2, -1), 
 	Vector2i(-2, 1), Vector2i(-2, -1), 
 	Vector2i(1, 2), Vector2i(1, -2), 
-	Vector2i(-1, 2), Vector2i(-1, -2)
-	]
+	Vector2i(-1, 2), Vector2i(-1, -2)]
 	match self.get_meta("is_white"):
 		true:
 			match self.get_meta("Name"):
 				"pawn":
-					for i in range (2):
+					var x = 1
+					if position.x == 2: x+=1
+					for i in range (x):
 						aux.x += 1
 						if check_position_legal(aux):
 							legal_moves.append(aux)
@@ -59,7 +60,9 @@ func update_legal_moves():
 		false:
 			match self.get_meta("Name"):
 				"pawn":
-					for i in range (2):
+					var x = 1
+					if position.x == board_size-1: x+=1
+					for i in range (x):
 						aux.x -= 1
 						if check_position_legal(aux):
 							legal_moves.append(aux)
@@ -84,12 +87,8 @@ func _process(delta):
 	refresh_texture()
 
 func _on_focus_entered():
-	update_legal_moves()
-	print(legal_moves)
 	var parent_board = self.get_parent().get_parent().get_parent()
-	for x in legal_moves:
-		parent_board.show_move_markers(x)
-	
+	parent_board.piece_selected(self)
+
 func _on_focus_exited():
-	var parent_board = self.get_parent().get_parent().get_parent()
-	parent_board.clear_move_markers()
+	pass
