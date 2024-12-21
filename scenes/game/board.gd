@@ -39,6 +39,13 @@ func get_tile(tile_position):
 	var tile = board.get_node(str(tile_position.x) + "," + str(tile_position.y))
 	return tile
 
+func get_piece_from_tile(tile):
+	for child in tile.get_children():
+		if child.has_meta("is_white"):
+			return child  
+	return null  
+
+
 func add_piece(is_white, name, position):
 	var tile = get_tile(position)
 	var new_piece = piece.instantiate()
@@ -63,10 +70,17 @@ func set_board_from_FEN(fen_code):
 			add_piece(true, FenDictionary.piece_names["white"][i], Vector2i(y, x))
 			x = x+1
 
+func update_piece_moves():
+	for tile in board.get_children():
+		piece = get_piece_from_tile(tile)
+		if piece != null: piece.update_legal_moves()
+
 func move_piece(piece, tile):
-	piece.get_parent().remove_child(piece)
-	tile.add_child(piece)
+	var x = get_piece_from_tile(tile)
+	if x!= null: x.queue_free()
+	piece.reparent(tile, false)
 	piece.set_meta("Position", tile.get_meta("Position"))
+	update_piece_moves()
 
 func show_move_markers(position):
 	var tile = get_tile(position)
@@ -75,8 +89,9 @@ func show_move_markers(position):
 
 func clear_move_markers():
 	for i in board.get_children():
-		if i.has_node("MoveMarker"):
-			i.get_node("MoveMarker").queue_free()
+		for x in i.get_children():
+			if x is Panel:
+				x.queue_free()
 	pass
 
 func piece_selected(piece):
@@ -90,11 +105,12 @@ func tile_selected(tile):
 	clear_move_markers()
 	var position = tile.get_meta("Position")
 	print(position)
-	if last_focus.name == "Piece" and last_focus.legal_moves.has(position) == true:
+	if last_focus.has_meta("is_white") and last_focus.legal_moves.has(position) == true:
 		move_piece(last_focus, tile)
 		print("piece moved")
 	last_focus = tile
 	pass
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if get_meta("board_size") != board_size: #update the board if board_size has changed

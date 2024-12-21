@@ -23,6 +23,17 @@ func check_position_legal(position):
 		return true 
 	else: return false
 
+func check_can_capture(position):
+	var parent_board = self.get_parent().get_parent().get_parent()
+	var board_size = parent_board.get_meta("board_size")
+	if position.x > 0 and position.x <= board_size and position.y > 0 and position.y <= board_size:
+		if parent_board.get_tile(position).has_node("Piece"):
+			var second_piece = parent_board.get_tile(position).get_node("Piece")
+			if self.get_meta("is_white") != second_piece.get_meta("is_white") and second_piece.get_meta("name") != "king":
+				return true
+	return false
+
+
 func update_legal_moves():	
 	var parent_board = self.get_parent().get_parent().get_parent()
 	var board_size = parent_board.get_meta("board_size")
@@ -44,12 +55,18 @@ func update_legal_moves():
 						aux.x += 1
 						if check_position_legal(aux):
 							legal_moves.append(aux)
+						else:
+							break
+					if check_can_capture(position + (Vector2i(1, 1))):
+						legal_moves.append(position + (Vector2i(1, 1)))
+					if check_can_capture(position + (Vector2i(1, -1))):
+						legal_moves.append(position + (Vector2i(1, -1)))
 				"rook":
 					pass
 				"knight":
 					for move in knight_moves:
 						aux = position + move
-						if check_position_legal(aux):
+						if check_position_legal(aux) or check_can_capture(aux):
 							legal_moves.append(aux)
 				"bishop":
 					pass
@@ -66,6 +83,12 @@ func update_legal_moves():
 						aux.x -= 1
 						if check_position_legal(aux):
 							legal_moves.append(aux)
+						else:
+							break
+					if check_can_capture(position + (Vector2i(-1, 1))):
+						legal_moves.append(position + (Vector2i(-1, 1)))
+					if check_can_capture(position + (Vector2i(-1, -1))):
+						legal_moves.append(position + (Vector2i(-1, -1)))
 				"rook":
 					pass
 				"knight":
